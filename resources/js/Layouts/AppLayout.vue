@@ -1,133 +1,183 @@
 <template>
-  <div>
-    <Head :title="title" />
+    <div>
+        <Head :title="title"/>
 
-    <jet-banner />
+        <jet-banner/>
+        <div class="container my-3">
+            <div class="container-fluid p-3">
+                <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom sticky-top rounded-3">
+                    <div class="container-fluid">
+                        <!-- Logo -->
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                                aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
 
-    <nav class="navbar navbar-expand-md navbar-light bg-white border-bottom sticky-top">
-      <div class="container">
-        <!-- Logo -->
-        <Link class="navbar-brand me-4" :href="route('dashboard')">
-          <jet-application-mark width="36" />
-        </Link>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <!-- Left Side Of Navbar -->
+                            <ul class="navbar-nav me-auto">
+                                <jet-nav-link :href="route('home')" :active="route().current('home')">
+                                    Home
+                                </jet-nav-link>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <!-- Left Side Of Navbar -->
-          <ul class="navbar-nav me-auto">
-            <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-              Dashboard
-            </jet-nav-link>
-          </ul>
+                                <jet-nav-link v-if="$page.props.user !== null" :href="route('dashboard')"
+                                              :active="route().current('dashboard')">
+                                    Your orders
+                                </jet-nav-link>
 
-          <!-- Right Side Of Navbar -->
-          <ul class="navbar-nav align-items-baseline">
-            <!-- Team Management -->
-            <jet-dropdown id="teamManagementDropdown" v-if="$page.props.jetstream.hasTeamFeatures">
-              <template #trigger>
-                {{ $page.props.user.current_team.name }}
+                                <jet-nav-link :href="route('product.index')" :active="route().current('product.index')">
+                                    Products
+                                </jet-nav-link>
+                            </ul>
 
-                <svg class="me-2" width="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-                </svg>
-              </template>
+                            <div v-if="$page.props.user !== null">
+                                <!-- Right Side Of Navbar -->
+                                <ul class="navbar-nav align-items-baseline">
 
-              <template #content>
-                <!-- Team Management -->
-                <template v-if="$page.props.jetstream.hasTeamFeatures">
-                  <h6 class="dropdown-header">
-                    Manage Team
-                  </h6>
+                                    <!-- Team Management -->
+                                    <jet-dropdown id="teamManagementDropdown"
+                                                  v-if="$page.props.jetstream.hasTeamFeatures">
+                                        <template #trigger>
+                                            {{ $page.props.user.current_team.name ?? '' }}
 
-                  <!-- Team Settings -->
-                  <jet-dropdown-link :href="route('teams.show', $page.props.user.current_team)">
-                    Team Settings
-                  </jet-dropdown-link>
+                                            <svg class="me-2" width="18" xmlns="http://www.w3.org/2000/svg"
+                                                 viewBox="0 0 20 20"
+                                                 fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                      d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                                      clip-rule="evenodd"/>
+                                            </svg>
+                                        </template>
 
-                  <jet-dropdown-link :href="route('teams.create')" v-if="$page.props.jetstream.canCreateTeams">
-                    Create New Team
-                  </jet-dropdown-link>
+                                        <template #content>
+                                            <!-- Team Management -->
+                                            <template v-if="$page.props.jetstream.hasTeamFeatures">
+                                                <h6 class="dropdown-header">
+                                                    Manage Team
+                                                </h6>
 
-                  <hr class="dropdown-divider">
+                                                <!-- Team Settings -->
+                                                <jet-dropdown-link
+                                                    :href="route('teams.show', $page.props.user.current_team)">
+                                                    Team Settings
+                                                </jet-dropdown-link>
 
-                  <!-- Team Switcher -->
-                  <h6 class="dropdown-header">
-                    Switch Teams
-                  </h6>
+                                                <jet-dropdown-link :href="route('teams.create')"
+                                                                   v-if="$page.props.jetstream.canCreateTeams">
+                                                    Create New Team
+                                                </jet-dropdown-link>
 
-                  <template v-for="team in $page.props.user.all_teams" :key="team.id">
-                    <form @submit.prevent="switchToTeam(team)">
-                      <jet-dropdown-link as="button">
-                        <div class="d-flex">
-                          <svg v-if="team.id == $page.props.user.current_team_id" class="me-1 text-success" width="20" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="currentColor" viewBox="0 0 24 24">
-                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                          </svg>
-                          <span class="text-truncate" style="width: 12rem;">{{ team.name }}</span>
-                        </div>
-                      </jet-dropdown-link>
-                    </form>
-                  </template>
-                </template>
-              </template>
-            </jet-dropdown>
+                                                <hr class="dropdown-divider">
 
-            <!-- Authentication Links -->
-            <jet-dropdown id="settingsDropdown">
-              <template #trigger>
-                <img v-if="$page.props.jetstream.managesProfilePhotos" class="rounded-circle" width="32" height="32" :src="$page.props.user.profile_photo_url" :alt="$page.props.user.name" />
+                                                <!-- Team Switcher -->
+                                                <h6 class="dropdown-header">
+                                                    Switch Teams
+                                                </h6>
 
-                <span v-else>
-                  {{ $page.props.user.name }}
+                                                <template v-for="team in $page.props.user.all_teams" :key="team.id">
+                                                    <form @submit.prevent="switchToTeam(team)">
+                                                        <jet-dropdown-link as="button">
+                                                            <div class="d-flex">
+                                                                <svg v-if="team.id == $page.props.user.current_team_id"
+                                                                     class="me-1 text-success" width="20" fill="none"
+                                                                     stroke-linecap="round" stroke-linejoin="round"
+                                                                     stroke-width="2"
+                                                                     stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path
+                                                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                                                </svg>
+                                                                <span class="text-truncate" style="width: 12rem;">{{
+                                                                        team.name
+                                                                    }}</span>
+                                                            </div>
+                                                        </jet-dropdown-link>
+                                                    </form>
+                                                </template>
+                                            </template>
+                                        </template>
+                                    </jet-dropdown>
 
-                  <svg class="ms-2" width="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    <!-- Authentication Links -->
+                                    <jet-dropdown id="settingsDropdown">
+                                        <template #trigger>
+                                            <img v-if="$page.props.jetstream.managesProfilePhotos"
+                                                 class="rounded-circle"
+                                                 width="32"
+                                                 height="32" :src="$page.props.user.profile_photo_url ?? ''"
+                                                 :alt="$page.props.user.name ?? ''"/>
+
+                                            <span v-else>
+                  {{ $page.props.user.name ?? '' }}
+                  <svg class="ms-2" width="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                       fill="currentColor">
+                    <path fill-rule="evenodd"
+                          d="M10 3a1 1 0 01.707.293l3 3a1 1 0 01-1.414 1.414L10 5.414 7.707 7.707a1 1 0 01-1.414-1.414l3-3A1 1 0 0110 3zm-3.707 9.293a1 1 0 011.414 0L10 14.586l2.293-2.293a1 1 0 011.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                          clip-rule="evenodd"/>
                   </svg>
                 </span>
-              </template>
+                                        </template>
 
-              <template #content>
-                <!-- Account Management -->
-                <h6 class="dropdown-header small text-muted">
-                  Manage Account
-                </h6>
+                                        <template #content>
+                                            <!-- Account Management -->
+                                            <h6 class="dropdown-header small text-muted">
+                                                Manage Account
+                                            </h6>
 
-                <jet-dropdown-link :href="route('profile.show')">
-                  Profile
-                </jet-dropdown-link>
+                                            <jet-dropdown-link :href="route('profile.show')">
+                                                Profile
+                                            </jet-dropdown-link>
 
-                <jet-dropdown-link :href="route('api-tokens.index')" v-if="$page.props.jetstream.hasApiFeatures">
-                  API Tokens
-                </jet-dropdown-link>
+                                            <jet-dropdown-link :href="route('api-tokens.index')"
+                                                               v-if="$page.props.jetstream.hasApiFeatures">
+                                                API Tokens
+                                            </jet-dropdown-link>
 
-                <hr class="dropdown-divider">
+                                            <hr class="dropdown-divider">
 
-                <!-- Authentication -->
-                <form @submit.prevent="logout">
-                  <jet-dropdown-link as="button">
-                    Log out
-                  </jet-dropdown-link>
-                </form>
-              </template>
-            </jet-dropdown>
-          </ul>
+                                            <!-- Authentication -->
+                                            <form @submit.prevent="logout">
+                                                <jet-dropdown-link as="button">
+                                                    Log out
+                                                </jet-dropdown-link>
+                                            </form>
+                                        </template>
+                                    </jet-dropdown>
+                                </ul>
+                            </div>
+                            <div v-else>
+                                <ul class="navbar-nav align-items-baseline">
+                                    <jet-nav-link :href="route('register')"
+                                                  :active="route().current('register')">
+                                        Register
+                                    </jet-nav-link>
+                                    <jet-nav-link :href="route('login')"
+                                                  :active="route().current('login')">
+                                        Login
+                                    </jet-nav-link>
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- Page Heading -->
+            <header class="m-3 p-3 bg-white card border-bottom">
+                <div class="container-fluid">
+                    <slot name="header"></slot>
+                </div>
+            </header>
+
+
+
+        <!-- Page Content -->
+        <main class="container my-5">
+            <slot></slot>
+        </main>
         </div>
-      </div>
-    </nav>
-
-    <!-- Page Heading -->
-    <header class="d-flex py-3 bg-white shadow-sm border-bottom">
-      <div class="container">
-        <slot name="header"></slot>
-      </div>
-    </header>
-
-    <!-- Page Content -->
-    <main class="container my-5">
-      <slot></slot>
-    </main>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -137,48 +187,48 @@ import JetApplicationMark from '@/Jetstream/ApplicationMark.vue'
 import JetDropdown from '@/Jetstream/Dropdown.vue'
 import JetDropdownLink from '@/Jetstream/DropdownLink.vue'
 import JetNavLink from '@/Jetstream/NavLink.vue'
-import { Head, Link } from '@inertiajs/inertia-vue3'
+import {Head, Link} from '@inertiajs/inertia-vue3'
 
 export default {
-  props: {
-    title: String,
-  },
-
-  components: {
-    Head,
-    JetApplicationLogo,
-    JetBanner,
-    JetApplicationMark,
-    JetDropdown,
-    JetDropdownLink,
-    JetNavLink,
-    Link,
-  },
-
-  data() {
-    return {
-      showingNavigationDropdown: false,
-    }
-  },
-
-  methods: {
-    switchToTeam(team) {
-      this.$inertia.put(route('current-team.update'), {
-        'team_id': team.id
-      }, {
-        preserveState: false
-      })
+    props: {
+        title: String,
     },
 
-    logout() {
-      this.$inertia.post(route('logout'));
+    components: {
+        Head,
+        JetApplicationLogo,
+        JetBanner,
+        JetApplicationMark,
+        JetDropdown,
+        JetDropdownLink,
+        JetNavLink,
+        Link,
     },
-  },
 
-  computed: {
-    path() {
-      return window.location.pathname
+    data() {
+        return {
+            showingNavigationDropdown: false,
+        }
+    },
+
+    methods: {
+        switchToTeam(team) {
+            this.$inertia.put(route('current-team.update'), {
+                'team_id': team.id
+            }, {
+                preserveState: false
+            })
+        },
+
+        logout() {
+            this.$inertia.post(route('logout'));
+        },
+    },
+
+    computed: {
+        path() {
+            return window.location.pathname
+        }
     }
-  }
 }
 </script>
