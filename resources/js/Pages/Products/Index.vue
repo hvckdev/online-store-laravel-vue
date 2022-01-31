@@ -1,8 +1,9 @@
 <template>
-    <app-layout title="Products list">
+    <app-layout title="products">
         <template #header>
             <h2 class="h4 font-weight-bold">
                 Products
+                <button class="btn btn-dark float-end">Add</button>
             </h2>
         </template>
     </app-layout>
@@ -13,7 +14,18 @@ import AppLayout from "@/Layouts/AppLayout";
 
 export default {
     name: "Index",
-    components: {AppLayout}
+    components: {AppLayout},
+
+    data() {
+        return {
+
+        }
+    },
+
+    createProduct() {
+
+    }
+
 }
 </script>
 

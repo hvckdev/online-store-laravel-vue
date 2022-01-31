@@ -26,9 +26,25 @@
                                     Your orders
                                 </jet-nav-link>
 
-                                <jet-nav-link :href="route('product.index')" :active="route().current('product.index')">
+                                <jet-nav-link :href="route('products')" :active="route().current('products')">
                                     Products
                                 </jet-nav-link>
+
+                                <jet-dropdown id="adminDropdown">
+                                    <template #trigger>
+                                        Admin panel
+                                    </template>
+
+                                    <template #content>
+                                        <h6 class="dropdown-header">
+                                            Manage
+                                        </h6>
+
+                                        <jet-dropdown-link :href="route('category.index')">
+                                            Categories
+                                        </jet-dropdown-link>
+                                    </template>
+                                </jet-dropdown>
                             </ul>
 
                             <div v-if="$page.props.user !== null">

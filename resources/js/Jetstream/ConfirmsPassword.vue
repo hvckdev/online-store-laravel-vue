@@ -32,7 +32,7 @@
           <div v-show="form.processing" class="spinner-border spinner-border-sm" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>
-          
+
           {{ button }}
         </jet-button>
       </template>
@@ -94,7 +94,7 @@
           if (response.data.confirmed) {
             this.$emit('confirmed');
           } else {
-            this.modal.toggle()
+                this.modal.toggle()
             this.form.password = '';
 
             setTimeout(() => {

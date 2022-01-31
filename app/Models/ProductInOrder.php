@@ -6,17 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Product extends Model
+class ProductInOrder extends Model
 {
     use HasFactory;
 
-    public function category(): BelongsTo
+    public function product(): BelongsTo
     {
-        return $this->belongsTo(ProductCategory::class, 'category_id');
+        return $this->belongsTo(Product::class);
     }
 
-    public function getIsInStockAttribute(): bool
+    public function order(): BelongsTo
     {
-        return $this->in_stock > 0;
+        return $this->belongsTo(Order::class);
     }
 }
