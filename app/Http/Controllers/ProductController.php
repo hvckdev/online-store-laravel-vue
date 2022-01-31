@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateProductRequest;
-use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -20,8 +19,6 @@ class ProductController extends Controller
     public function index(): AnonymousResourceCollection
     {
         $products = Product::all();
-
-        return ProductResource::collection($products);
     }
 
     /**
@@ -43,8 +40,6 @@ class ProductController extends Controller
     public function store(CreateProductRequest $request): AnonymousResourceCollection
     {
         $product = Product::firstOrCreate($request->validated());
-
-        return ProductResource::collection($product);
     }
 
     /**
