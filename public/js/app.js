@@ -23964,11 +23964,11 @@ __webpack_require__.r(__webpack_exports__);
       isEdit: false,
       currentProduct: {},
       form: (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_3__.useForm)({
-        category_id: '',
-        name: '',
-        description: '',
+        category_id: null,
+        name: null,
+        description: null,
         photo_path: null,
-        in_stock: ''
+        in_stock: null
       })
     };
   },
@@ -23995,12 +23995,22 @@ __webpack_require__.r(__webpack_exports__);
       this.modal().show();
     },
     createOrUpdateProduct: function createOrUpdateProduct() {
+      var _this = this;
+
       this.modal().hide();
 
       if (!this.isEdit) {
-        this.form.post(this.route('product.store'));
+        this.form.post(this.route('product.store'), {
+          onSuccess: function onSuccess() {
+            return _this.form.reset();
+          }
+        });
       } else {
-        this.form.put(this.route('product.update', this.currentProduct.id));
+        this.form.put(this.route('product.update', this.currentProduct.id), {
+          onSuccess: function onSuccess() {
+            return _this.form.reset();
+          }
+        });
       }
     },
     destroyProduct: function destroyProduct() {

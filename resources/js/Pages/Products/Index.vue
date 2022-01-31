@@ -19,18 +19,18 @@
 
                 <template #body>
                     <tr v-for="product in products.data" :key="product.id">
-                        <td> {{ product.id }} </td>
-                        <td> {{ product.name }} </td>
-                        <td> {{ product.category.name }} </td>
-                        <td> {{ product.in_stock }} </td>
+                        <td> {{ product.id }}</td>
+                        <td> {{ product.name }}</td>
+                        <td> {{ product.category.name }}</td>
+                        <td> {{ product.in_stock }}</td>
                         <td>
                             <div class="btn-group">
                                 <button @click="updateProductModalOpen(product)"
                                         class="btn btn-sm btn-primary text-white">Edit
                                 </button>
                                 <button @click="currentProduct = product"
-                                    data-bs-toggle="modal" data-bs-target="#deleteProductModal"
-                                    class="btn btn-sm btn-danger text-white">Delete
+                                        data-bs-toggle="modal" data-bs-target="#deleteProductModal"
+                                        class="btn btn-sm btn-danger text-white">Delete
                                 </button>
                             </div>
                         </td>
@@ -118,11 +118,11 @@ export default {
             currentProduct: {},
 
             form: useForm({
-                category_id: '',
-                name: '',
-                description: '',
+                category_id: null,
+                name: null,
+                description: null,
                 photo_path: null,
-                in_stock: ''
+                in_stock: null
             })
         }
     },
@@ -160,9 +160,13 @@ export default {
             this.modal().hide()
 
             if (!this.isEdit) {
-                this.form.post(this.route('product.store'))
+                this.form.post(this.route('product.store'), {
+                    onSuccess: () => this.form.reset()
+                })
             } else {
-                this.form.put(this.route('product.update', this.currentProduct.id))
+                this.form.put(this.route('product.update', this.currentProduct.id), {
+                    onSuccess: () => this.form.reset()
+                })
             }
         },
 
