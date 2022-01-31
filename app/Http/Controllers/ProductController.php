@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use App\Models\ProductCategory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
+use Inertia\Inertia;
+use Throwable;
 
 
 class ProductController extends Controller
@@ -14,38 +17,33 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return AnonymousResourceCollection
+     * @return \Inertia\Response
      */
-    public function index(): AnonymousResourceCollection
+    public function index(): \Inertia\Response
     {
-        $products = Product::all();
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        //
+        return Inertia::render('Products/Index', [
+            'products' => Product::with('category')->paginate(10),
+            'categories' => ProductCategory::all(),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param CreateProductRequest $request
-     * @return AnonymousResourceCollection
+     * @return RedirectResponse
      */
-    public function store(CreateProductRequest $request): AnonymousResourceCollection
+    public function store(CreateProductRequest $request): RedirectResponse
     {
-        $product = Product::firstOrCreate($request->validated());
+        Product::firstOrCreate($request->validated());
+
+        return redirect()->route('product.index');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Product $product
+     * @param Product $product
      * @return Response
      */
     public function show(Product $product)
@@ -54,36 +52,30 @@ class ProductController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param \App\Models\Product $product
-     * @return Response
-     */
-    public function edit(Product $product)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Product $product
-     * @return Response
+     * @param UpdateProductRequest $request
+     * @param Product $product
+     * @return RedirectResponse
      */
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product): RedirectResponse
     {
-        //
+        $product->update($request->validated());
+
+        return redirect()->route('product.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Product $product
-     * @return Response
+     * @param Product $product
+     * @return RedirectResponse
+     * @throws Throwable
      */
-    public function destroy(Product $product)
+    public function destroy(Product $product): RedirectResponse
     {
-        //
+        $product->deleteOrFail();
+
+        return redirect()->route('product.index');
     }
 }

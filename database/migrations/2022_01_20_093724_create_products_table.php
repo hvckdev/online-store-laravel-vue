@@ -18,8 +18,8 @@ class CreateProductsTable extends Migration
             $table->unsignedBigInteger('category_id');
             $table->string('name');
             $table->text('description');
-            $table->string('photo_path');
-            $table->integer('in_stock');
+            $table->string('photo_path')->nullable();
+            $table->integer('in_stock')->nullable();
             $table->timestamps();
         });
     }
