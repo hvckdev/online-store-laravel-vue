@@ -26,10 +26,6 @@
                                     Your orders
                                 </jet-nav-link>
 
-                                <jet-nav-link :href="route('products')" :active="route().current('products')">
-                                    Products
-                                </jet-nav-link>
-
                                 <jet-dropdown id="adminDropdown">
                                     <template #trigger>
                                         Admin panel
@@ -42,6 +38,10 @@
 
                                         <jet-dropdown-link :href="route('category.index')">
                                             Categories
+                                        </jet-dropdown-link>
+
+                                        <jet-dropdown-link :href="route('product.index')">
+                                            Products
                                         </jet-dropdown-link>
                                     </template>
                                 </jet-dropdown>

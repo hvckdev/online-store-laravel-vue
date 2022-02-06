@@ -76,9 +76,8 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout";
-import TableLayout from "@/Components/Content/TableLayout";
-import Modal from "@/Components/Content/ModalForm";
-import CreateForm from "@/Pages/Categories/Partials/Form";
+import TableLayout from "@/Shared/Content/Table";
+import Modal from "@/Shared/Content/Modal";
 import {Link, useForm} from "@inertiajs/inertia-vue3";
 
 export default {
@@ -87,7 +86,6 @@ export default {
         AppLayout,
         TableLayout,
         Modal,
-        CreateForm,
         Link
     },
 

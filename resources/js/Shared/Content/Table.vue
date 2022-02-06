@@ -1,5 +1,5 @@
 <template>
-    <table class="table">
+    <table class="table overflow-auto">
         <thead>
             <tr>
                 <slot name="head"></slot>
