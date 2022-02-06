@@ -3,7 +3,7 @@
         <template #header>
             <h2 class="h4 font-weight-bold">
                 Products
-                <button class="btn btn-dark float-end" @click="createProductModalOpen">Add</button>
+                <a :href="route('product.create')" class="btn btn-dark float-end">Create</a>
             </h2>
         </template>
 
@@ -20,13 +20,14 @@
                 <template #body>
                     <tr v-for="product in products.data" :key="product.id">
                         <td> {{ product.id }}</td>
-                        <td> {{ product.name }}</td>
+                        <td><img :src="product.photo_url" width="32" height="32" alt="Photo"> {{ product.name }}</td>
                         <td> {{ product.category.name }}</td>
                         <td> {{ product.in_stock }}</td>
                         <td>
                             <div class="btn-group">
                                 <button @click="updateProductModalOpen(product)"
-                                        class="btn btn-sm btn-primary text-white">Edit
+                                        class="btn btn-sm btn-primary text-white">
+                                    Edit
                                 </button>
                                 <button @click="currentProduct = product"
                                         data-bs-toggle="modal" data-bs-target="#deleteProductModal"
@@ -41,10 +42,10 @@
 
         <!-- Creating / editing category modal -->
         <modal id="productModal">
-            <template #title>{{ isEdit ? 'Edit' : 'Create' }} product</template>
+            <template #title>Edit product</template>
 
             <template #content>
-                <form method="post" @submit.prevent="createOrUpdateProduct">
+                <form method="post" @submit.prevent="createOrUpdateProduct" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="name">Name</label>
@@ -58,6 +59,9 @@
                                     {{ category.name }}
                                 </option>
                             </select>
+                            <div class="invalid-feedback" v-if="form.errors.category_id">
+                                {{ form.errors.category_id }}
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="description">Description</label>
@@ -66,7 +70,13 @@
                         </div>
                         <div class="mb-3">
                             <label for="photo">Photo</label>
-                            <input class="form-control" type="file" id="photo">
+                            <div v-show="photoPreview" class="block w-20 mt-3 mb-3 h-20 photo-preview"
+                                 :style="'background-image: url(\'' + photoPreview + '\');'">
+                            </div>
+
+                            <input @change="updateFormAndPhotoPreview" ref="photo" class="form-control" type="file"
+                                   id="photo">
+                            <div class="invalid-feedback" v-if="form.errors.photo">{{ form.errors.photo }}</div>
                         </div>
                         <div class="mb-3">
                             <label for="quantity">Quantity</label>
@@ -74,7 +84,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-dark">{{ isEdit ? 'Edit' : 'Create' }}</button>
+                        <button type="submit" class="btn btn-dark">Edit</button>
                     </div>
                 </form>
             </template>
@@ -100,9 +110,10 @@
 
 <script>
 import AppLayout from "@/Layouts/AppLayout";
-import TableLayout from "@/Components/Content/TableLayout";
-import Modal from "@/Components/Content/ModalForm";
+import TableLayout from "@/Shared/Content/Table";
+import Modal from "@/Shared/Content/Modal";
 import {useForm} from "@inertiajs/inertia-vue3";
+import {Method} from "@inertiajs/inertia";
 
 export default {
     name: "Index",
@@ -111,42 +122,32 @@ export default {
         TableLayout,
         Modal
     },
-
     data() {
         return {
-            isEdit: false,
             currentProduct: {},
+            photoPreview: null,
 
             form: useForm({
+                _method: null,
                 category_id: null,
                 name: null,
                 description: null,
-                photo_path: null,
+                photo: null,
                 in_stock: null
             })
         }
     },
-
     props: {
         products: Object,
         categories: Object,
     },
-
     methods: {
         modal() {
             return bootstrap.Modal.getOrCreateInstance(document.getElementById('productModal'))
         },
-
-        createProductModalOpen() {
-            this.isEdit = false
-            this.form.reset()
-
-            this.modal().show()
-        },
-
         updateProductModalOpen(product) {
-            this.isEdit = true
             this.currentProduct = product
+            this.photoPreview = product.photo_url
 
             this.form.name = product.name
             this.form.description = product.description
@@ -155,31 +156,43 @@ export default {
 
             this.modal().show()
         },
-
         createOrUpdateProduct() {
-            this.modal().hide()
+            this.form.post(this.route('product.update', this.currentProduct.id), {
+                onSuccess: () => {
+                    this.modal().hide()
+                    this.form.reset()
+                },
 
-            if (!this.isEdit) {
-                this.form.post(this.route('product.store'), {
-                    onSuccess: () => this.form.reset()
-                })
-            } else {
-                this.form.put(this.route('product.update', this.currentProduct.id), {
-                    onSuccess: () => this.form.reset()
-                })
-            }
+                onError: () => {
+                    console.log(this.form.errors)
+                }
+            })
         },
-
         destroyProduct() {
             bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteProductModal')).hide()
 
             this.form.delete(this.route('product.destroy', this.currentProduct.id))
-        }
+        },
+        updateFormAndPhotoPreview(e) {
+            this.form.photo = e.target.files[0]
+            const reader = new FileReader()
+            reader.onload = (e) => {
+                this.photoPreview = e.target.result
+            };
+            reader.readAsDataURL(this.$refs.photo.files[0])
+        },
     }
-
 }
 </script>
 
 <style scoped>
-
+.photo-preview {
+    width: 5rem;
+    height: 5rem;
+    border-radius: 999px;
+    display: block;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+}
 </style>

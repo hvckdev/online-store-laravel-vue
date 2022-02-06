@@ -12,7 +12,7 @@
 import {defineComponent} from "vue"
 import AppLayout from "@/Layouts/AppLayout.vue"
 import Welcome from "@/Jetstream/Welcome.vue"
-import CardLayout from "@/Components/Content/CardLayout";
+import CardLayout from "@/Shared/Content/Card";
 
 export default defineComponent({
     components: {

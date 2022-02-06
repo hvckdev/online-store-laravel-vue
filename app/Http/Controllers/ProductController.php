@@ -7,8 +7,8 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
 use Inertia\Inertia;
+use Inertia\Response;
 use Throwable;
 
 
@@ -17,9 +17,9 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Inertia\Response
+     * @return Response
      */
-    public function index(): \Inertia\Response
+    public function index(): Response
     {
         return Inertia::render('Products/Index', [
             'products' => Product::with('category')->paginate(10),
@@ -28,31 +28,37 @@ class ProductController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created product in storage.
      *
      * @param CreateProductRequest $request
      * @return RedirectResponse
      */
     public function store(CreateProductRequest $request): RedirectResponse
     {
-        Product::firstOrCreate($request->validated());
+        Product::firstOrCreate($request->hasFile('photo')
+            ? array_merge($request->except(['photo']),
+                ['photo_path' => $request->file('photo')
+                    ->storePublicly('product-photos', ['disk' => Product::photoDisk()])]
+            )
+            : $request->except(['photo']));
 
         return redirect()->route('product.index');
     }
 
     /**
-     * Display the specified resource.
+     * Display product edit form
      *
-     * @param Product $product
      * @return Response
      */
-    public function show(Product $product)
+    public function create(): Response
     {
-        //
+        return Inertia::render('Products/Create', [
+            'categories' => ProductCategory::all()
+        ]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the product in storage.
      *
      * @param UpdateProductRequest $request
      * @param Product $product
@@ -60,13 +66,19 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product): RedirectResponse
     {
-        $product->update($request->validated());
+        $product->update($request->hasFile('photo')
+            ? array_merge($request->validated(),
+                ['photo_path' => $request->file('photo')
+                    ->storePublicly('product-photos', ['disk' => Product::photoDisk()])]
+            )
+            : $request->validated()
+        );
 
         return redirect()->route('product.index');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the product from storage.
      *
      * @param Product $product
      * @return RedirectResponse
