@@ -16,14 +16,14 @@
                             The best merch that u ever seen
                         </h3>
                         <div class="text-center">
-                            <a href="#1" class="btn btn-outline-dark">Let&rsquo;s check</a>
+                            <a href="#available" class="btn btn-outline-dark">Let&rsquo;s check</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="album p-3 card">
+        <div class="album p-3 card" id="available">
             <div class="container card">
                 <h3 class="text-center">Available to buy</h3>
                 <hr>
@@ -36,6 +36,7 @@
                                  preserveAspectRatio="xMidYMid slice" focusable="false">
 
                             <div class="card-body">
+                                <small class="small text-muted">{{ product.category.name }}</small>
                                 <p class="card-title fw-bolder">{{ product.name }}</p>
                                 <p class="card-text">{{ product.description }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
