@@ -47,6 +47,8 @@ class MakeAdmin extends Command
 
         $user->assignRole(Role::findByName('admin'));
 
+        $this->info("{$user->name} is admin now.");
+
         return 0;
     }
 }
