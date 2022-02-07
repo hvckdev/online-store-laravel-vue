@@ -20,13 +20,14 @@ Route::get('/', static function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
+        'products' => \App\Models\Product::all()
     ]);
 })->name('home');
 
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->name('dashboard');
+})->name( 'dashboard');
 
 Route::group(['middleware' => ['auth:web', 'verified', 'password.confirm']], static function () {
     Route::resource('category', ProductCategoryController::class);

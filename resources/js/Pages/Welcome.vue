@@ -22,6 +22,33 @@
                 </div>
             </div>
         </div>
+
+        <div class="album p-3 card">
+            <div class="container card">
+                <h3 class="text-center">Available to buy</h3>
+                <hr>
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                    <div class="col" v-for="product in products" :key="product.id">
+                        <div class="card shadow-sm">
+                            <img :src="product.photo_url" class="bd-placeholder-img card-img-top" width="300"
+                                 height="300"
+                                 xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail"
+                                 preserveAspectRatio="xMidYMid slice" focusable="false">
+
+                            <div class="card-body">
+                                <p class="card-title fw-bolder">{{ product.name }}</p>
+                                <p class="card-text">{{ product.description }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <button type="button" class="btn btn-sm btn-outline-dark">Add to order</button>
+                                    <small class="text-muted">{{ product.in_stock }} available</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </app-layout>
 </template>
 
@@ -30,7 +57,10 @@ import AppLayout from "@/Layouts/AppLayout";
 
 export default {
     name: "Welcome",
-    components: {AppLayout}
+    components: {AppLayout},
+    props: {
+        products: Object,
+    }
 }
 </script>
 
