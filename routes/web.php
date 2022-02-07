@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\ProductCategoryController;
-use App\Http\Controllers\ProductController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\Web\Admin\ProductCategoryController;
+use App\Http\Controllers\Web\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -29,5 +28,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
 
-Route::resource('category', ProductCategoryController::class);
-Route::resource('product', ProductController::class);
+Route::group(['middleware' => ['auth:web', 'verified', 'password.confirm']], static function () {
+    Route::resource('category', ProductCategoryController::class);
+    Route::resource('product', ProductController::class);
+});
