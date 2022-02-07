@@ -25,26 +25,6 @@
                                               :active="route().current('dashboard')">
                                     Your orders
                                 </jet-nav-link>
-
-                                <jet-dropdown id="adminDropdown">
-                                    <template #trigger>
-                                        Admin panel
-                                    </template>
-
-                                    <template #content>
-                                        <h6 class="dropdown-header">
-                                            Manage
-                                        </h6>
-
-                                        <jet-dropdown-link :href="route('category.index')">
-                                            Categories
-                                        </jet-dropdown-link>
-
-                                        <jet-dropdown-link :href="route('product.index')">
-                                            Products
-                                        </jet-dropdown-link>
-                                    </template>
-                                </jet-dropdown>
                             </ul>
 
                             <div v-if="$page.props.user !== null">
@@ -151,6 +131,23 @@
 
                                             <hr class="dropdown-divider">
 
+                                            <!-- Admin panel links -->
+                                            <template v-if="$page.props.user.is_admin">
+                                                <h6 class="dropdown-header">
+                                                    Admin panel
+                                                </h6>
+
+                                                <jet-dropdown-link :href="route('category.index')">
+                                                    Categories
+                                                </jet-dropdown-link>
+
+                                                <jet-dropdown-link :href="route('product.index')">
+                                                    Products
+                                                </jet-dropdown-link>
+
+                                                <hr class="dropdown-divider">
+                                            </template>
+
                                             <!-- Authentication -->
                                             <form @submit.prevent="logout">
                                                 <jet-dropdown-link as="button">
@@ -187,11 +184,10 @@
             </header>
 
 
-
-        <!-- Page Content -->
-        <main class="container my-5">
-            <slot></slot>
-        </main>
+            <!-- Page Content -->
+            <main class="container my-5">
+                <slot></slot>
+            </main>
         </div>
     </div>
 </template>
