@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
+use App\Http\Controllers\Controller;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -10,8 +11,6 @@ use Inertia\Response;
 class HomeController extends Controller
 {
     /**
-     *
-     *
      * @param Request $request
      * @return Response
      */
