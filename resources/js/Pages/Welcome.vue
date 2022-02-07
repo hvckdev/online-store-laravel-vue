@@ -40,7 +40,7 @@
                                 <p class="card-title fw-bolder">{{ product.name }}</p>
                                 <p class="card-text">{{ product.description }}</p>
                                 <div class="d-flex justify-content-between align-items-center">
-                                    <button type="button" class="btn btn-sm btn-outline-dark">Add to order</button>
+                                    <button type="button" class="btn btn-sm btn-outline-dark">Buy</button>
                                     <small class="text-muted">{{ product.in_stock }} available</small>
                                 </div>
                             </div>

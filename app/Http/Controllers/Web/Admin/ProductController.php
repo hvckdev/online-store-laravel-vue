@@ -27,7 +27,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the products.
      *
      * @return Response
      */

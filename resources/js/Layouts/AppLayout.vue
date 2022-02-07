@@ -21,8 +21,8 @@
                                     Home
                                 </jet-nav-link>
 
-                                <jet-nav-link v-if="$page.props.user !== null" :href="route('dashboard')"
-                                              :active="route().current('dashboard')">
+                                <jet-nav-link v-if="$page.props.user !== null" :href="route('order.index')"
+                                              :active="route().current('order.index')">
                                     Your orders
                                 </jet-nav-link>
                             </ul>

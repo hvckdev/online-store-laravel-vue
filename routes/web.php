@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Web\Admin\ProductCategoryController;
 use App\Http\Controllers\Web\Admin\ProductController;
+use App\Http\Controllers\Web\OrderController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -16,19 +18,19 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', static function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'products' => \App\Models\Product::all()
-    ]);
-})->name('home');
+/**
+ * Home page
+ */
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
+/**
+ * Orders page
+ */
+Route::middleware(['auth:web', 'verified'])->resource('order', OrderController::class);
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name( 'dashboard');
-
+/**
+ * Admin panel
+ */
 Route::group(['middleware' => ['auth:web', 'verified', 'password.confirm']], static function () {
     Route::resource('category', ProductCategoryController::class);
     Route::resource('product', ProductController::class);
