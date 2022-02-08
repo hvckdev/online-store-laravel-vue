@@ -1,8 +1,10 @@
 <?php
 
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\Web\Admin\ProductCategoryController;
+use App\Http\Controllers\Web\Admin\ProductController;
+use App\Http\Controllers\Web\HomeController;
+use App\Http\Controllers\Web\OrderController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,15 +17,20 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+/**
+ * Home page
+ */
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+/**
+ * Orders page
+ */
+Route::middleware(['auth:web', 'verified'])->resource('order', OrderController::class);
+
+/**
+ * Admin panel
+ */
+Route::group(['middleware' => ['auth:web', 'verified', 'password.confirm']], static function () {
+    Route::resource('category', ProductCategoryController::class);
+    Route::resource('product', ProductController::class);
+});
