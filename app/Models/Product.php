@@ -33,11 +33,6 @@ class Product extends Model
         return $this->belongsTo(ProductCategory::class, 'category_id');
     }
 
-    public function order(): BelongsTo
-    {
-        return $this->belongsTo(Order::class);
-    }
-
     public function getIsInStockAttribute(): bool
     {
         return $this->in_stock > 0;
