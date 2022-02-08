@@ -8,10 +8,10 @@ use App\Http\Requests\Admin\Product\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
-use function redirect;
 
 
 class ProductController extends Controller
@@ -54,7 +54,7 @@ class ProductController extends Controller
             )
             : $request->except(['photo']));
 
-        return redirect()->route('product.index');
+        return Redirect::route('product.index');
     }
 
     /**
@@ -86,7 +86,7 @@ class ProductController extends Controller
             : $request->validated()
         );
 
-        return redirect()->route('product.index');
+        return Redirect::route('product.index');
     }
 
     /**
@@ -100,6 +100,6 @@ class ProductController extends Controller
     {
         $product->deleteOrFail();
 
-        return redirect()->route('product.index');
+        return Redirect::route('product.index');
     }
 }

@@ -7,10 +7,10 @@ use App\Http\Requests\Admin\Category\CreateProductCategoryRequest;
 use App\Http\Requests\Admin\Category\UpdateProductCategoryRequest;
 use App\Models\ProductCategory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
-use function redirect;
 
 class ProductCategoryController extends Controller
 {
@@ -46,7 +46,7 @@ class ProductCategoryController extends Controller
     {
         ProductCategory::firstOrCreate($request->validated());
 
-        return redirect()->route('category.index');
+        return Redirect::route('category.index');
     }
 
     /**
@@ -60,7 +60,7 @@ class ProductCategoryController extends Controller
     {
         $category->update($request->validated());
 
-        return redirect()->route('category.index');
+        return Redirect::route('category.index');
     }
 
     /**
@@ -74,6 +74,6 @@ class ProductCategoryController extends Controller
     {
         $category->deleteOrFail();
 
-        return redirect()->route('category.index');
+        return Redirect::route('category.index');
     }
 }
