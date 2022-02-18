@@ -45,7 +45,7 @@
             <template #title>Edit product</template>
 
             <template #content>
-                <form method="post" @submit.prevent="createOrUpdateProduct" enctype="multipart/form-data">
+                <form method="post" @submit.prevent="updateProduct" enctype="multipart/form-data">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="name">Name</label>
@@ -128,7 +128,7 @@ export default {
             photoPreview: null,
 
             form: useForm({
-                _method: null,
+                _method: Method.PUT,
                 category_id: null,
                 name: null,
                 description: null,
@@ -147,8 +147,8 @@ export default {
         },
         updateProductModalOpen(product) {
             this.currentProduct = product
-            this.photoPreview = product.photo_url
 
+            this.photoPreview = product.photo_url
             this.form.name = product.name
             this.form.description = product.description
             this.form.category_id = product.category_id
@@ -156,7 +156,7 @@ export default {
 
             this.modal().show()
         },
-        createOrUpdateProduct() {
+        updateProduct() {
             this.form.post(this.route('product.update', this.currentProduct.id), {
                 onSuccess: () => {
                     this.modal().hide()

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Web\Admin;
+namespace App\Http\Controllers\Web\Admin\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Product\CreateProductRequest;
 use App\Http\Requests\Admin\Product\UpdateProductRequest;
 use App\Models\Product;
-use App\Models\ProductCategory;
+use App\Models\Product\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
@@ -35,7 +35,7 @@ class ProductController extends Controller
     {
         return Inertia::render('Products/Index', [
             'products' => Product::with('category')->paginate(10),
-            'categories' => ProductCategory::all(),
+            'categories' => Category::all(),
         ]);
     }
 
@@ -65,7 +65,7 @@ class ProductController extends Controller
     public function create(): Response
     {
         return Inertia::render('Products/Create', [
-            'categories' => ProductCategory::all()
+            'categories' => Category::all()
         ]);
     }
 

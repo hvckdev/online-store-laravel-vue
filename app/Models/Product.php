@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Product\Category;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
@@ -30,7 +30,7 @@ class Product extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(ProductCategory::class, 'category_id');
+        return $this->belongsTo(Category::class, 'category_id');
     }
 
     public function getIsInStockAttribute(): bool

@@ -1,29 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Web\Admin;
+namespace App\Http\Controllers\Web\Admin\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Category\CreateProductCategoryRequest;
 use App\Http\Requests\Admin\Category\UpdateProductCategoryRequest;
-use App\Models\ProductCategory;
+use App\Models\Product\Category;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 use Throwable;
 
-class ProductCategoryController extends Controller
+class CategoryController extends Controller
 {
-    /**
-     * Create the controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->authorizeResource(ProductCategory::class);
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -32,7 +22,7 @@ class ProductCategoryController extends Controller
     public function index(): Response
     {
         return Inertia::render('Categories/Index', [
-            'categories' => ProductCategory::paginate(15)
+            'categories' => Category::paginate(15)
         ]);
     }
 
@@ -44,7 +34,7 @@ class ProductCategoryController extends Controller
      */
     public function store(CreateProductCategoryRequest $request): RedirectResponse
     {
-        ProductCategory::firstOrCreate($request->validated());
+        Category::firstOrCreate($request->validated());
 
         return Redirect::route('category.index');
     }
@@ -53,10 +43,10 @@ class ProductCategoryController extends Controller
      * Update the specified resource in storage.
      *
      * @param UpdateProductCategoryRequest $request
-     * @param ProductCategory $category
+     * @param \App\Models\Product\Category $category
      * @return RedirectResponse
      */
-    public function update(UpdateProductCategoryRequest $request, ProductCategory $category): RedirectResponse
+    public function update(UpdateProductCategoryRequest $request, Category $category): RedirectResponse
     {
         $category->update($request->validated());
 
@@ -66,11 +56,11 @@ class ProductCategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param ProductCategory $category
+     * @param \App\Models\Product\Category $category
      * @return RedirectResponse
      * @throws Throwable
      */
-    public function destroy(ProductCategory $category): RedirectResponse
+    public function destroy(Category $category): RedirectResponse
     {
         $category->deleteOrFail();
 

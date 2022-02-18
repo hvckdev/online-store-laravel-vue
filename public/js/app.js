@@ -23966,7 +23966,7 @@ __webpack_require__.r(__webpack_exports__);
       currentProduct: {},
       photoPreview: null,
       form: (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_3__.useForm)({
-        _method: null,
+        _method: _inertiajs_inertia__WEBPACK_IMPORTED_MODULE_4__.Method.PUT,
         category_id: null,
         name: null,
         description: null,
@@ -23992,7 +23992,7 @@ __webpack_require__.r(__webpack_exports__);
       this.form.in_stock = product.in_stock;
       this.modal().show();
     },
-    createOrUpdateProduct: function createOrUpdateProduct() {
+    updateProduct: function updateProduct() {
       var _this = this;
 
       this.form.post(this.route('product.update', this.currentProduct.id), {
@@ -28639,7 +28639,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
           return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
             method: "post",
             onSubmit: _cache[5] || (_cache[5] = (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)(function () {
-              return $options.createOrUpdateProduct && $options.createOrUpdateProduct.apply($options, arguments);
+              return $options.updateProduct && $options.updateProduct.apply($options, arguments);
             }, ["prevent"])),
             enctype: "multipart/form-data"
           }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [_hoisted_17, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
